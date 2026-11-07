@@ -15,7 +15,7 @@ if (app()->isLocal()) {
     Route::prefix('dev')->name('dev.')->group(function () {
         Route::view('tailwind', 'dev.tailwind')->name('tailwind');
         Route::view('components', 'dev.components')->name('components');
-
+        Route::livewire('livewire', 'pages::dev.livewire')->name('livewire');
     });
 
 
