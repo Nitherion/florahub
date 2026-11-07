@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'home')->name('home');
+Route::view('user/dashboard', 'user.dashboard')->name('user.dashboard');
+Route::view('admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
@@ -19,6 +21,4 @@ if (app()->isLocal()) {
         Route::livewire('flux', 'pages::dev.flux')->name('flux');
     });
 
-
 }
-

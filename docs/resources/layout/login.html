@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FloraHub — Iniciar sessão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f4f7f2', 100: '#e6ede0', 200: '#cddcc2', 300: '#aac29b',
+                            400: '#82a271', 500: '#5f8350', 600: '#4a6b3d', 700: '#3c5632',
+                            800: '#32462b', 900: '#2b3b25', 950: '#16200f',
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-stone-50 font-sans text-stone-800 antialiased">
+
+    <div class="grid min-h-screen lg:grid-cols-2">
+
+        <!-- Decorative panel -->
+        <div class="relative hidden flex-col justify-between overflow-hidden bg-brand-800 p-12 text-brand-50 lg:flex">
+            <a href="home.html" class="relative flex items-center gap-2">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-inset ring-white/20">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
+                </span>
+                <span class="text-lg font-semibold tracking-tight text-white">FloraHub</span>
+            </a>
+
+            <div class="relative max-w-sm">
+                <p class="text-2xl font-medium leading-relaxed text-white">
+                    "Acompanhe todas as suas plantas e nunca se esqueça de quando precisaram de água pela última vez."
+                </p>
+                <p class="mt-4 text-sm text-brand-200">O seu companheiro botânico pessoal.</p>
+            </div>
+
+            <p class="relative text-xs text-brand-300">© 2026 FloraHub — projeto educativo.</p>
+        </div>
+
+        <!-- Form panel -->
+        <div class="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
+            <div class="mx-auto w-full max-w-sm">
+                <a href="home.html" class="mb-10 flex items-center gap-2 lg:hidden">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
+                    </span>
+                    <span class="text-lg font-semibold tracking-tight text-stone-900">FloraHub</span>
+                </a>
+
+                <h1 class="text-2xl font-semibold tracking-tight text-stone-900">Bem-vindo de volta</h1>
+                <p class="mt-1.5 text-sm text-stone-500">Inicie sessão para gerir a sua coleção de plantas.</p>
+
+                <form class="mt-8 space-y-5">
+                    <div>
+                        <label for="email" class="mb-1.5 block text-sm font-medium text-stone-700">Email</label>
+                        <input id="email" type="email" placeholder="voce@exemplo.com" class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="password" class="mb-1.5 block text-sm font-medium text-stone-700">Palavra-passe</label>
+                            <a href="#" class="text-sm font-medium text-brand-700 hover:text-brand-800">Esqueceu-se da palavra-passe?</a>
+                        </div>
+                        <input id="password" type="password" placeholder="••••••••" class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
+                    </div>
+
+                    <label class="flex items-center gap-2 text-sm text-stone-600">
+                        <input type="checkbox" class="h-4 w-4 rounded border-stone-300 text-brand-600 focus:ring-brand-500" />
+                        Lembrar-me
+                    </label>
+
+                    <button type="submit" class="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">
+                        Iniciar sessão
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-stone-500">
+                    Ainda não tem conta?
+                    <a href="register.html" class="font-medium text-brand-700 hover:text-brand-800">Criar uma</a>
+                </p>
+
+                <!-- Development-only quick login -->
+                <div class="mt-10 rounded-2xl border border-dashed border-amber-300 bg-amber-50 p-5">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-amber-200 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-amber-900">Apenas em desenvolvimento</span>
+                    </div>
+                    <h2 class="mt-3 text-sm font-semibold text-amber-900">Início de sessão rápido</h2>
+                    <p class="mt-1 text-xs text-amber-800">Apenas protótipos visuais — ainda não estão ligados à autenticação.</p>
+                    <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+                        <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white px-4 py-2.5 text-sm font-semibold text-amber-900 hover:bg-amber-100">
+                            Entrar como Utilizador
+                        </button>
+                        <button type="button" class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white px-4 py-2.5 text-sm font-semibold text-amber-900 hover:bg-amber-100">
+                            Entrar como Administrador
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

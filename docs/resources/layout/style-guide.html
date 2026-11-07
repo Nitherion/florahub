@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FloraHub — Guia de estilo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f4f7f2', 100: '#e6ede0', 200: '#cddcc2', 300: '#aac29b',
+                            400: '#82a271', 500: '#5f8350', 600: '#4a6b3d', 700: '#3c5632',
+                            800: '#32462b', 900: '#2b3b25', 950: '#16200f',
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-stone-50 font-sans text-stone-800 antialiased">
+
+    <div class="mx-auto max-w-5xl px-6 py-12">
+
+        <header class="mb-12">
+            <p class="text-sm font-medium text-brand-700">FloraHub — Referência</p>
+            <h1 class="mt-1 text-3xl font-semibold tracking-tight text-stone-900">Guia de estilo</h1>
+            <p class="mt-2 max-w-2xl text-stone-600">
+                Elementos visuais partilhados entre os protótipos públicos, de utilizador e de administração.
+                Este ficheiro não é um ecrã da aplicação — existe para que o mesmo botão, badge, formulário e
+                padrão de interação sejam usados de forma consistente, e para servir de referência direta
+                quando estes elementos forem convertidos em componentes Blade/Livewire.
+            </p>
+
+            <!-- Table of contents -->
+            <nav class="mt-6 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                <a href="#cores" class="text-brand-700 hover:text-brand-800">Cores</a>
+                <a href="#tipografia" class="text-brand-700 hover:text-brand-800">Tipografia</a>
+                <a href="#botoes" class="text-brand-700 hover:text-brand-800">Botões</a>
+                <a href="#badges" class="text-brand-700 hover:text-brand-800">Badges</a>
+                <a href="#alerts" class="text-brand-700 hover:text-brand-800">Alerts</a>
+                <a href="#formularios" class="text-brand-700 hover:text-brand-800">Controlos de formulário</a>
+                <a href="#cards" class="text-brand-700 hover:text-brand-800">Cards</a>
+                <a href="#tabelas" class="text-brand-700 hover:text-brand-800">Tabelas</a>
+                <a href="#paginacao" class="text-brand-700 hover:text-brand-800">Paginação</a>
+                <a href="#empty-states" class="text-brand-700 hover:text-brand-800">Empty states</a>
+                <a href="#toast" class="text-brand-700 hover:text-brand-800">Notificações Toast</a>
+                <a href="#drawer" class="text-brand-700 hover:text-brand-800">Painel lateral (Drawer)</a>
+                <a href="#modal" class="text-brand-700 hover:text-brand-800">Janelas de confirmação (Modal)</a>
+            </nav>
+        </header>
+
+        <!-- Cores -->
+        <section id="cores" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Cores</h2>
+            <p class="mt-1 text-sm text-stone-500">Verde botânico (<code class="rounded bg-stone-100 px-1 py-0.5 text-xs">brand</code>) como cor de destaque principal, neutros quentes (<code class="rounded bg-stone-100 px-1 py-0.5 text-xs">stone</code>) para superfícies e texto, e cores semânticas usadas apenas para estados.</p>
+            <div class="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-11">
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-50 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">50</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-100 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">100</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-200"></div><span class="mt-1 block text-[11px] text-stone-500">200</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-300"></div><span class="mt-1 block text-[11px] text-stone-500">300</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-400"></div><span class="mt-1 block text-[11px] text-stone-500">400</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-500"></div><span class="mt-1 block text-[11px] text-stone-500">500</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-600"></div><span class="mt-1 block text-[11px] text-stone-500">600</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-700"></div><span class="mt-1 block text-[11px] text-stone-500">700</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-800"></div><span class="mt-1 block text-[11px] text-stone-500">800</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-900"></div><span class="mt-1 block text-[11px] text-stone-500">900</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-brand-950"></div><span class="mt-1 block text-[11px] text-stone-500">950</span></div>
+            </div>
+            <div class="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-11">
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-50 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">stone-50</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-100 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">100</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">200</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-400"></div><span class="mt-1 block text-[11px] text-stone-500">400</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-600"></div><span class="mt-1 block text-[11px] text-stone-500">600</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-800"></div><span class="mt-1 block text-[11px] text-stone-500">800</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-stone-900"></div><span class="mt-1 block text-[11px] text-stone-500">900</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-amber-100 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">amber</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-red-100 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">red</span></div>
+                <div class="text-center"><div class="h-12 rounded-lg bg-sky-100 ring-1 ring-inset ring-stone-200"></div><span class="mt-1 block text-[11px] text-stone-500">sky</span></div>
+            </div>
+        </section>
+
+        <!-- Tipografia -->
+        <section id="tipografia" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Tipografia</h2>
+            <div class="mt-4 space-y-3 rounded-2xl border border-stone-200 bg-white p-6">
+                <p class="text-4xl font-semibold tracking-tight text-stone-900">Título 1 — 4xl / semibold</p>
+                <p class="text-2xl font-semibold tracking-tight text-stone-900">Título 2 — 2xl / semibold</p>
+                <p class="text-lg font-semibold text-stone-900">Título 3 — lg / semibold</p>
+                <p class="text-base text-stone-700">Texto de corpo — base / normal, usado em parágrafos e descrições.</p>
+                <p class="text-sm text-stone-600">Texto secundário — sm, usado em legendas, metadados e rótulos.</p>
+                <p class="text-xs text-stone-500">Texto de apoio / ajuda — xs, usado em dicas, datas e legendas curtas.</p>
+                <p class="text-sm italic text-stone-500">Estilo de nome científico — sm itálico, usado em nomes botânicos.</p>
+            </div>
+        </section>
+
+        <!-- Botões -->
+        <section id="botoes" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Botões</h2>
+            <div class="mt-4 flex flex-wrap items-end gap-6 rounded-2xl border border-stone-200 bg-white p-6">
+                <div class="text-center">
+                    <button class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700">Guardar</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Primário</p>
+                </div>
+                <div class="text-center">
+                    <button class="inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-50">Cancelar</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Secundário</p>
+                </div>
+                <div class="text-center">
+                    <button class="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50">Saber mais</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Ghost</p>
+                </div>
+                <div class="text-center">
+                    <button class="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700">Eliminar</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Perigo</p>
+                </div>
+                <div class="text-center">
+                    <button disabled class="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-400">Indisponível</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Desativado</p>
+                </div>
+                <div class="text-center">
+                    <button class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700">Adicionar</button>
+                    <p class="mt-1.5 text-xs text-stone-400">Pequeno</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Badges -->
+        <section id="badges" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Badges</h2>
+            <div class="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-stone-200 bg-white p-6">
+                <span class="inline-flex items-center rounded-full bg-brand-100 px-2.5 py-1 text-xs font-medium text-brand-800">Saudável</span>
+                <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">Brevemente</span>
+                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">Em atraso</span>
+                <span class="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700">Informação</span>
+                <span class="inline-flex items-center rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-600">Rascunho</span>
+            </div>
+        </section>
+
+        <!-- Alerts -->
+        <section id="alerts" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Alerts</h2>
+            <p class="mt-1 max-w-2xl text-sm text-stone-500">
+                Mensagens <strong class="font-medium text-stone-700">persistentes ou contextuais</strong>, apresentadas
+                como parte do conteúdo da página (por exemplo, dentro de um formulário ou de uma secção). Diferem das
+                <a href="#toast" class="font-medium text-brand-700 hover:text-brand-800">Notificações Toast</a>,
+                que são temporárias e flutuam sobre a interface — ver a distinção completa mais abaixo.
+            </p>
+            <div class="mt-4 space-y-3">
+                <div class="flex items-start gap-3 rounded-lg border-l-4 border-brand-600 bg-brand-50 p-4">
+                    <svg class="mt-0.5 h-5 w-5 flex-none text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div><p class="text-sm font-medium text-brand-800">Planta adicionada à sua coleção.</p><p class="text-sm text-brand-700">A Monstera deliciosa já está listada em As minhas plantas.</p></div>
+                </div>
+                <div class="flex items-start gap-3 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4">
+                    <svg class="mt-0.5 h-5 w-5 flex-none text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                    <div><p class="text-sm font-medium text-amber-800">Lembrete para amanhã.</p><p class="text-sm text-amber-700">Regar a Figueira-lira na sala.</p></div>
+                </div>
+                <div class="flex items-start gap-3 rounded-lg border-l-4 border-red-500 bg-red-50 p-4">
+                    <svg class="mt-0.5 h-5 w-5 flex-none text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                    <div><p class="text-sm font-medium text-red-800">Não foi possível guardar as alterações.</p><p class="text-sm text-red-700">Verifique os campos destacados e tente novamente.</p></div>
+                </div>
+                <div class="flex items-start gap-3 rounded-lg border-l-4 border-sky-500 bg-sky-50 p-4">
+                    <svg class="mt-0.5 h-5 w-5 flex-none text-sky-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+                    <div><p class="text-sm font-medium text-sky-800">A autenticação de dois fatores está disponível.</p><p class="text-sm text-sky-700">Ative-a em Definições → Segurança.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controlos de formulário -->
+        <section id="formularios" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Controlos de formulário</h2>
+            <div class="mt-4 grid gap-6 rounded-2xl border border-stone-200 bg-white p-6 sm:grid-cols-2">
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-stone-700">Nome da planta</label>
+                    <input type="text" placeholder="Ex.: Costela-de-adão da Cozinha" class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
+                    <p class="mt-1.5 text-xs text-stone-500">Aparece em todo o painel e na lista de plantas.</p>
+                </div>
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-stone-700">Email</label>
+                    <input type="email" value="utilizador@" class="w-full rounded-lg border border-red-400 bg-white px-3.5 py-2.5 text-sm text-stone-900 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20" />
+                    <p class="mt-1.5 text-xs text-red-600">Introduza um endereço de email válido.</p>
+                </div>
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-stone-700">Família botânica</label>
+                    <select class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
+                        <option>Araceae</option>
+                        <option>Moraceae</option>
+                        <option>Asparagaceae</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-stone-700">Notas</label>
+                    <textarea rows="1" placeholder="Notas opcionais" class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"></textarea>
+                </div>
+                <label class="flex items-center gap-2 text-sm text-stone-700">
+                    <input type="checkbox" checked class="h-4 w-4 rounded border-stone-300 text-brand-600 focus:ring-brand-500" />
+                    Lembrar-me
+                </label>
+                <label class="flex items-center gap-2 text-sm text-stone-400">
+                    <input type="text" disabled placeholder="Campo desativado" class="w-full cursor-not-allowed rounded-lg border border-stone-200 bg-stone-100 px-3.5 py-2.5 text-sm text-stone-400" />
+                </label>
+            </div>
+        </section>
+
+        <!-- Cards -->
+        <section id="cards" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Cards</h2>
+            <p class="mt-1 text-sm text-stone-500">Cartões de conteúdo e blocos de estatística.</p>
+            <div class="mt-4 grid gap-4 sm:grid-cols-3">
+                <div class="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+                    <p class="text-sm text-stone-500">As minhas plantas</p>
+                    <p class="mt-1 text-3xl font-semibold text-stone-900">12</p>
+                </div>
+                <div class="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+                    <p class="text-sm text-stone-500">Lembretes próximos</p>
+                    <p class="mt-1 text-3xl font-semibold text-stone-900">3</p>
+                </div>
+                <div class="rounded-2xl border border-brand-200 bg-brand-50 p-6 shadow-sm">
+                    <p class="text-sm text-brand-700">Espécies acompanhadas</p>
+                    <p class="mt-1 text-3xl font-semibold text-brand-900">9</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabelas -->
+        <section id="tabelas" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Tabelas</h2>
+            <p class="mt-1 text-sm text-stone-500">As tabelas incluem uma área de pesquisa textual, alinhada à esquerda, acima do conteúdo.</p>
+            <div class="mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white">
+                <div class="border-b border-stone-200 p-4">
+                    <div class="relative max-w-sm">
+                        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                        <input type="text" placeholder="Pesquisar espécie…" class="w-full rounded-lg border border-stone-300 bg-white py-2 pl-9 pr-3 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-stone-200 text-sm">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-stone-500">Espécie</th>
+                                <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-stone-500">Família</th>
+                                <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-stone-500">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr class="hover:bg-stone-50">
+                                <td class="px-5 py-3 font-medium text-stone-900">Monstera deliciosa</td>
+                                <td class="px-5 py-3 text-stone-600">Araceae</td>
+                                <td class="px-5 py-3"><span class="inline-flex items-center rounded-full bg-brand-100 px-2.5 py-1 text-xs font-medium text-brand-800">Publicado</span></td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="px-5 py-3 font-medium text-stone-900">Calathea orbifolia</td>
+                                <td class="px-5 py-3 text-stone-600">Marantaceae</td>
+                                <td class="px-5 py-3"><span class="inline-flex items-center rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-600">Rascunho</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paginação -->
+        <section id="paginacao" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Paginação</h2>
+            <div class="mt-4 flex items-center justify-between rounded-2xl border border-stone-200 bg-white px-5 py-4">
+                <p class="text-sm text-stone-500">A mostrar <span class="font-medium text-stone-700">1–12</span> de <span class="font-medium text-stone-700">48</span></p>
+                <nav class="flex items-center gap-1">
+                    <a href="#" class="rounded-lg px-3 py-1.5 text-sm text-stone-400">Anterior</a>
+                    <a href="#" class="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white">1</a>
+                    <a href="#" class="rounded-lg px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100">2</a>
+                    <a href="#" class="rounded-lg px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100">3</a>
+                    <span class="px-2 text-sm text-stone-400">…</span>
+                    <a href="#" class="rounded-lg px-3 py-1.5 text-sm text-stone-600 hover:bg-stone-100">4</a>
+                    <a href="#" class="rounded-lg px-3 py-1.5 text-sm font-medium text-stone-600 hover:bg-stone-100">Seguinte</a>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Empty states -->
+        <section id="empty-states" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Empty states</h2>
+            <div class="mt-4 flex flex-col items-center rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-14 text-center">
+                <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
+                </span>
+                <h3 class="mt-4 text-base font-semibold text-stone-900">Ainda não tem plantas</h3>
+                <p class="mt-1 max-w-sm text-sm text-stone-500">Adicione a sua primeira planta a partir do catálogo de espécies para começar a acompanhar cuidados e lembretes.</p>
+                <button class="mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Explorar espécies</button>
+            </div>
+        </section>
+
+        <!-- Notificações Toast -->
+        <section id="toast" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Notificações Toast</h2>
+            <p class="mt-1 max-w-2xl text-sm text-stone-500">
+                Feedback <strong class="font-medium text-stone-700">temporário</strong>, apresentado depois de uma
+                ação do utilizador. Ao contrário dos <a href="#alerts" class="font-medium text-brand-700 hover:text-brand-800">Alerts</a>,
+                que fazem parte do conteúdo da página, os Toasts flutuam sobre a interface, no
+                <strong class="font-medium text-stone-700">canto inferior direito</strong>, e desaparecem
+                automaticamente passado algum tempo.
+            </p>
+
+            <div class="mt-4 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500 sm:grid-cols-4">
+                <div><span class="font-semibold text-stone-700">Alert</span> — dentro da página</div>
+                <div><span class="font-semibold text-stone-700">Toast</span> — sobre a página</div>
+                <div><span class="font-semibold text-stone-700">Alert</span> — sem botão fechar</div>
+                <div><span class="font-semibold text-stone-700">Toast</span> — com botão fechar</div>
+            </div>
+
+            <!-- Preview frame simulating the bottom-right of a viewport -->
+            <div class="relative mt-4 h-96 overflow-hidden rounded-2xl border border-stone-200 bg-stone-100">
+                <p class="absolute left-4 top-4 text-xs font-medium uppercase tracking-wide text-stone-400">Simulação do ecrã</p>
+
+                <div class="absolute bottom-4 right-4 flex w-full max-w-sm flex-col gap-3 px-4 sm:px-0">
+                    <!-- Sucesso -->
+                    <div class="flex w-full items-start gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-lg">
+                        <span class="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-full bg-brand-100 text-brand-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </span>
+                        <p class="flex-1 pt-1 text-sm font-medium text-stone-800">Planta adicionada com sucesso.</p>
+                        <button type="button" aria-label="Fechar notificação" class="flex-none rounded-md p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <!-- Erro -->
+                    <div class="flex w-full items-start gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-lg">
+                        <span class="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-full bg-red-100 text-red-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </span>
+                        <p class="flex-1 pt-1 text-sm font-medium text-stone-800">Não foi possível guardar as alterações.</p>
+                        <button type="button" aria-label="Fechar notificação" class="flex-none rounded-md p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <!-- Aviso -->
+                    <div class="flex w-full items-start gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-lg">
+                        <span class="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                        </span>
+                        <p class="flex-1 pt-1 text-sm font-medium text-stone-800">Existem campos que necessitam da sua atenção.</p>
+                        <button type="button" aria-label="Fechar notificação" class="flex-none rounded-md p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <!-- Informação -->
+                    <div class="flex w-full items-start gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-lg">
+                        <span class="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-full bg-sky-100 text-sky-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+                        </span>
+                        <p class="flex-1 pt-1 text-sm font-medium text-stone-800">O relatório está a ser preparado.</p>
+                        <button type="button" aria-label="Fechar notificação" class="flex-none rounded-md p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-3 text-xs text-stone-500">
+                Suportam múltiplos toasts empilhados verticalmente, com espaçamento adequado às margens do ecrã.
+                Em ecrãs pequenos, ocupam a largura disponível com a mesma margem lateral, mantendo a posição junto
+                à base do ecrã.
+            </p>
+        </section>
+
+        <!-- Painel lateral (Drawer / Slide-over) -->
+        <section id="drawer" class="mb-14 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Painel lateral (Drawer / Slide-over)</h2>
+            <p class="mt-1 max-w-2xl text-sm text-stone-500">
+                Painel que desliza a partir do lado direito do ecrã, sobre a página atual. Utilizado para fluxos
+                curtos de criação/edição em que o utilizador deve manter o contexto atual — por exemplo,
+                <em>Nova planta</em>, <em>Novo lembrete</em>, <em>Registar cuidado</em> ou <em>Editar informação simples</em>.
+            </p>
+
+            <div class="relative mt-4 h-[32rem] overflow-hidden rounded-2xl border border-stone-200 bg-stone-100">
+                <p class="absolute left-4 top-4 z-0 text-xs font-medium uppercase tracking-wide text-stone-400">Simulação do ecrã</p>
+
+                <!-- fake page content behind the drawer -->
+                <div class="absolute inset-0 space-y-4 p-6 opacity-40">
+                    <div class="h-8 w-40 rounded-lg bg-stone-300"></div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="h-20 rounded-xl bg-white"></div>
+                        <div class="h-20 rounded-xl bg-white"></div>
+                        <div class="h-20 rounded-xl bg-white"></div>
+                    </div>
+                    <div class="h-32 rounded-xl bg-white"></div>
+                </div>
+
+                <!-- overlay -->
+                <div class="absolute inset-0 bg-stone-900/40"></div>
+
+                <!-- panel -->
+                <div class="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-xl">
+                    <div class="flex items-start justify-between border-b border-stone-200 px-6 py-5">
+                        <div>
+                            <h3 class="text-base font-semibold text-stone-900">Registar cuidado</h3>
+                            <p class="mt-1 text-sm text-stone-500">Adicione um novo registo ao histórico desta planta.</p>
+                        </div>
+                        <button type="button" aria-label="Fechar painel" class="flex-none rounded-md p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-600">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 space-y-5 overflow-y-auto px-6 py-6">
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-stone-700">Tipo de cuidado</label>
+                            <select class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
+                                <option>Rega</option>
+                                <option>Fertilização</option>
+                                <option>Poda</option>
+                                <option>Transplante</option>
+                                <option>Tratamento</option>
+                                <option>Outro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-stone-700">Data</label>
+                            <input type="date" value="2026-09-30" class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-stone-700">Notas</label>
+                            <textarea rows="4" placeholder="Ex.: Regada com 250 ml, solo ainda húmido." class="w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3 border-t border-stone-200 px-6 py-4">
+                        <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 hover:bg-stone-50">Cancelar</button>
+                        <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">Guardar</button>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-3 text-xs text-stone-500">
+                Em ecrãs pequenos, o painel ocupa a largura total (ou quase total) do ecrã, mantendo o mesmo
+                conceito de interação: cabeçalho fixo com título e botão de fechar, conteúdo com scroll próprio
+                e ações fixas no rodapé.
+            </p>
+        </section>
+
+        <!-- Janelas de confirmação (Modal / Dialog) -->
+        <section id="modal" class="mb-4 scroll-mt-6">
+            <h2 class="text-lg font-semibold text-stone-900">Janelas de confirmação (Modal / Dialog)</h2>
+            <p class="mt-1 max-w-2xl text-sm text-stone-500">
+                Usadas principalmente para confirmar ações em que o utilizador deve aceitar ou cancelar
+                explicitamente uma operação. Apresentam uma sobreposição semi-transparente e uma caixa de
+                diálogo centrada, com hierarquia visual clara entre título, mensagem e ações.
+            </p>
+
+            <div class="mt-4 grid gap-6 sm:grid-cols-2">
+                <!-- Standard confirmation -->
+                <div>
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-400">Confirmação normal</p>
+                    <div class="relative flex h-72 items-center justify-center overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 p-4">
+                        <div class="absolute inset-0 bg-stone-900/40"></div>
+                        <div class="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sky-600">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </span>
+                            <h3 class="mt-4 text-base font-semibold text-stone-900">Marcar como regada?</h3>
+                            <p class="mt-1.5 text-sm text-stone-600">Esta planta será marcada como regada hoje. Pode alterar este registo mais tarde.</p>
+                            <div class="mt-6 flex justify-end gap-3">
+                                <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-50">Cancelar</button>
+                                <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destructive confirmation -->
+                <div>
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-400">Confirmação destrutiva</p>
+                    <div class="relative flex h-72 items-center justify-center overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 p-4">
+                        <div class="absolute inset-0 bg-stone-900/40"></div>
+                        <div class="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+                            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-red-100 text-red-600">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                            </span>
+                            <h3 class="mt-4 text-base font-semibold text-stone-900">Eliminar planta?</h3>
+                            <p class="mt-1.5 text-sm text-stone-600">Esta ação não pode ser anulada. Pretende continuar?</p>
+                            <div class="mt-6 flex justify-end gap-3">
+                                <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-50">Cancelar</button>
+                                <button type="button" class="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-3 text-xs text-stone-500">
+                Em ecrãs pequenos, a caixa de diálogo ocupa a largura disponível com uma margem lateral
+                confortável, mantendo-se sempre centrada verticalmente sobre a sobreposição.
+                A ação destrutiva usa sempre a cor semântica de perigo (vermelho), nunca a cor primária da marca.
+            </p>
+        </section>
+
+    </div>
+</body>
+</html>
