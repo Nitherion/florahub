@@ -14,6 +14,10 @@ require __DIR__.'/settings.php';
 if (app()->isLocal()) {
     Route::prefix('dev')->name('dev.')->group(function () {
         Route::view('tailwind', 'dev.tailwind')->name('tailwind');
+        Route::view('components', 'dev.components')->name('components');
+
     });
+
+
 }
 
