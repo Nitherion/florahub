@@ -16,6 +16,7 @@ if (app()->isLocal()) {
         Route::view('tailwind', 'dev.tailwind')->name('tailwind');
         Route::view('components', 'dev.components')->name('components');
         Route::livewire('livewire', 'pages::dev.livewire')->name('livewire');
+        Route::livewire('flux', 'pages::dev.flux')->name('flux');
     });
 
 
