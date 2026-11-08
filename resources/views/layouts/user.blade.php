@@ -5,10 +5,10 @@
 <x-layouts::dashboard :title="$title">
 
     <x-slot:navigation>
-        <a href="{{ route('user.dashboard') }}" @class([
+        <a href="{{ route('dashboard') }}" @class([
             'flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-medium',
-            'border-brand-600 bg-brand-50 text-brand-800' => request()->routeIs('user.dashboard'),
-            'border-transparent text-stone-600 hover:bg-stone-50' => ! request()->routeIs('user.dashboard'),
+            'border-brand-600 bg-brand-50 text-brand-800' => request()->routeIs('dashboard'),
+            'border-transparent text-stone-600 hover:bg-stone-50' => ! request()->routeIs('dashboard'),
         ])>
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0L22.28 12M4.5 9.75V19.5a1.5 1.5 0 001.5 1.5h3.75v-6h4.5v6h3.75a1.5 1.5 0 001.5-1.5V9.75"/></svg>
             Painel
@@ -36,9 +36,9 @@
 
     <x-slot:sidebarFooter>
         <div class="flex items-center gap-3 rounded-lg px-2 py-2">
-            <span class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-800">SA</span>
+            <span class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-800">{{ auth()->user()->initials() }}</span>
             <div class="min-w-0">
-                <p class="truncate text-sm font-medium text-stone-900">Sofia Almeida</p>
+                <p class="truncate text-sm font-medium text-stone-900">{{ auth()->user()->name }}</p>
                 <p class="truncate text-xs text-stone-500">utilizador</p>
             </div>
         </div>
@@ -81,14 +81,20 @@
 
         <details class="relative">
             <summary class="flex list-none items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-stone-100 [&::-webkit-details-marker]:hidden">
-                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-800">SA</span>
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-800">{{ auth()->user()->initials() }}</span>
                 <svg class="h-4 w-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </summary>
             <div class="absolute right-0 z-20 mt-2 w-52 rounded-xl border border-stone-200 bg-white p-1.5 shadow-lg">
                 <a href="#" class="block rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">Perfil</a>
                 <a href="#" class="block rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">Definições</a>
                 <div class="my-1 border-t border-stone-200"></div>
-                <a href="#" class="block rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50">Terminar sessão</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">Terminar sessão</button>
+                    </form>
+                </form>
             </div>
         </details>
     </x-slot:actions>

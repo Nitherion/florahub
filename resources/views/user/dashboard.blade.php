@@ -1,6 +1,6 @@
 <x-layouts::user title="Painel">
 
-    <h2 class="text-2xl font-semibold tracking-tight text-stone-900">Bem-vinda de volta, Sofia</h2>
+    <h2 class="text-2xl font-semibold tracking-tight text-stone-900">Bem-vindo de volta, {{ auth()->user()->name }}</h2>
     <p class="mt-1 text-sm text-stone-500">terça-feira, 30 de setembro de 2026</p>
 
     <!-- Stats -->

@@ -1,24 +1,25 @@
 <?php
 
+use App\Http\Controllers\Dev\QuickLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
-Route::view('user/dashboard', 'user.dashboard')->name('user.dashboard');
-Route::view('admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+// Início de sessão rápido: apenas em desenvolvimento (APP_ENV=local)
+Route::post('dev/login/{role}', QuickLoginController::class)
+    ->middleware('guest')
+    ->whereIn('role', ['admin', 'user'])
+    ->name('dev.login');
+
+Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
+    Route::view('dashboard', 'user.dashboard')->name('dashboard');
 });
 
-require __DIR__.'/settings.php';
-
-// Páginas de testes (guias 03.1 a 03.4): apenas em desenvolvimento (APP_ENV=local)
-if (app()->isLocal()) {
-    Route::prefix('dev')->name('dev.')->group(function () {
-        Route::view('tailwind', 'dev.tailwind')->name('tailwind');
-        Route::view('components', 'dev.components')->name('components');
-        Route::livewire('livewire', 'pages::dev.livewire')->name('livewire');
-        Route::livewire('flux', 'pages::dev.flux')->name('flux');
+Route::middleware(['auth', 'verified', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::view('dashboard', 'admin.dashboard')->name('dashboard');
     });
 
-}
+require __DIR__.'/settings.php';
