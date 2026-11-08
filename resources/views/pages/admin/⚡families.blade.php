@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Locked;
 
 
 
@@ -22,6 +23,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     public string $status = 'all';
     #[Url(as: 'family', except: '')]
     public string $showing = '';
+    #[Locked]
     public ?int $editingId = null;
     public string $name = '';
     public string $slug = '';
@@ -43,6 +45,8 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
             return;
         }
+
+        $this->authorize('view', $this->shownFamily);
 
         Flux::modal('family-show')->show();
     }
@@ -92,10 +96,15 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
      */
     public function show(int $id): void
     {
-        $this->showing = Family::withTrashed()->findOrFail($id)->slug;
+        $family = $this->findFamily($id);
+
+        $this->authorize('view', $family);
+
+        $this->showing = $family->slug;
 
         Flux::modal('family-show')->show();
     }
+
 
     /**
      * Close the show drawer and remove the family from the URL.
@@ -108,27 +117,39 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     }
 
     /**
+     * Find a family by id, including the soft deleted ones. The policy decides what can be done with it.
+     */
+    protected function findFamily(int $id): Family
+    {
+        return Family::withTrashed()->findOrFail($id);
+    }
+
+
+    /**
      * Open the drawer with an empty form.
      */
     public function create(): void
     {
+        $this->authorize('create', Family::class);
+
         $this->resetForm();
 
         Flux::modal('family-form')->show();
     }
+
 
     /**
      * Open the drawer with the family's data.
      */
     public function edit(int $id): void
     {
-        $family = Family::findOrFail($id);
+        $family = $this->findFamily($id);
+
+        $this->authorize('update', $family);
 
         $this->closeShow();
         $this->resetForm();
-        // …
 
-        $this->resetForm();
         $this->editingId = $family->id;
         $this->name = $family->name;
         $this->slug = $family->slug;
@@ -151,13 +172,32 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
      */
     public function save(): void
     {
+        $family = $this->editingId === null ? null : $this->findFamily($this->editingId);
+
+        if ($family === null) {
+            $this->authorize('create', Family::class);
+        } else {
+            $this->authorize('update', $family);
+        }
+
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('families', 'name')->ignore($this->editingId)],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('families', 'slug')->ignore($this->editingId)],
-            'description' => ['nullable', 'string', 'max:2000'],
+
         ]);
+        Flux::modal('family-form')->close();
+        $this->resetForm();
 
         $validated['description'] = $validated['description'] ?: null;
+
+        if ($family === null) {
+            Family::create($validated);
+
+            Flux::toast(variant: 'success', text: 'Família criada.');
+        } else {
+            $family->update($validated);
+
+            Flux::toast(variant: 'success', text: 'Família atualizada.');
+        }
+
 
         if ($this->editingId === null) {
             Family::create($validated);
@@ -189,22 +229,29 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
      */
     public function delete(int $id): void
     {
-        Family::findOrFail($id)->delete();
+        $family = $this->findFamily($id);
+
+        $this->authorize('delete', $family);
+
+        $family->delete();
 
         $this->closeShow();
 
         Flux::toast(variant: 'warning', text: 'Família removida.');
-
     }
+
 
     /**
      * Ask for confirmation before permanently deleting a soft deleted family.
      */
     public function confirmForceDelete(int $id): void
     {
-        $family = Family::onlyTrashed()->findOrFail($id);
+        $family = $this->findFamily($id);
+
+        $this->authorize('forceDelete', $family);
 
         $this->dispatch('confirm-action',
+
             heading: 'Eliminar definitivamente',
             message: "A família «{$family->name}» será eliminada definitivamente. Esta operação não pode ser desfeita.",
             confirmEvent: 'family-force-delete-confirmed',
@@ -216,11 +263,14 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     /**
      * Permanently delete a soft deleted family.
      */
-
     #[On('family-force-delete-confirmed')]
     public function forceDelete(int $id): void
     {
-        Family::onlyTrashed()->findOrFail($id)->forceDelete();
+        $family = $this->findFamily($id);
+
+        $this->authorize('forceDelete', $family);
+
+        $family->forceDelete();
 
         $this->closeShow();
 
@@ -228,15 +278,21 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     }
 
 
+
     /**
      * Restore a soft deleted family.
      */
     public function restore(int $id): void
     {
-        Family::onlyTrashed()->findOrFail($id)->restore();
+        $family = $this->findFamily($id);
+
+        $this->authorize('restore', $family);
+
+        $family->restore();
 
         Flux::toast(variant: 'success', text: 'Família restaurada.');
     }
+
 
     /**
      * Go back to the first page whenever the status filter changes.
@@ -332,18 +388,25 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-2">
-                                    @if ($family->trashed())
-                                        {{-- Próxima tarefa: pedir confirmação num modal antes de eliminar definitivamente --}}
-                                        <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
-                                        <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
+                                @can('restore', $family)
+                                    <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
+                                @endcan
 
-                                    @else
-                                        <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
-                                        <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
-                                    @endif
-                                </div>
+                                @can('forceDelete', $family)
+                                    <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
+                                @endcan
 
-                            </flux:table.cell>
+                                @can('update', $family)
+                                    <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
+                                @endcan
+
+                                @can('delete', $family)
+                                    <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
+            @endcan
+        </div>
+
+
+        </flux:table.cell>
                         </flux:table.row>
 
                     @empty
@@ -406,16 +469,25 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
                 </dl>
 
                 <div class="flex flex-wrap justify-end gap-2">
-                    @if ($shownFamily->trashed())
+                    @can('restore', $shownFamily)
                         <flux:button icon="arrow-uturn-left" wire:click="restore({{ $shownFamily->id }})">Restaurar</flux:button>
+                    @endcan
+
+                    @can('forceDelete', $shownFamily)
                         <flux:button variant="danger" icon="trash" wire:click="confirmForceDelete({{ $shownFamily->id }})">Eliminar definitivamente</flux:button>
-                    @else
+                    @endcan
+
+                    @can('update', $shownFamily)
                         <flux:button icon="pencil-square" wire:click="edit({{ $shownFamily->id }})">Editar</flux:button>
+                    @endcan
+
+                    @can('delete', $shownFamily)
                         <flux:button variant="danger" icon="trash" wire:click="delete({{ $shownFamily->id }})">Remover</flux:button>
-                    @endif
+                    @endcan
 
                     <flux:button variant="ghost" wire:click="closeShow">Fechar</flux:button>
                 </div>
+
             </div>
         @endif
     </flux:modal>

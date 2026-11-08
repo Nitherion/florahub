@@ -26,7 +26,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])
             ]);
         })->name('dashboard');
 
-        Route::livewire('families', 'pages::admin.families')->name('families.index');
+        Route::livewire('families', 'pages::admin.families')
+            ->can('viewAny', Family::class)
+            ->name('families.index');
+
     });
 
 require __DIR__.'/settings.php';
