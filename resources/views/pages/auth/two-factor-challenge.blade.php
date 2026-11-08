@@ -30,16 +30,11 @@
             }"
         >
             <div x-show="!showRecoveryInput">
-                <x-auth-header
-                    title="Código de autenticação"
-                    description="Introduza o código indicado pela sua aplicação de autenticação."/>
+                <x-auth-header title="Código de autenticação" description="Introduza o código indicado pela sua aplicação de autenticação."/>
             </div>
 
             <div x-show="showRecoveryInput">
-                <x-auth-header
-                    title="Código de autenticação"
-                    description="Confirme o acesso à sua conta introduzindo um dos seus códigos de recuperação"/>
-                />
+                <x-auth-header title="Código de autenticação" description="Confirme o acesso à sua conta introduzindo um dos seus códigos de recuperação"/>/>
             </div>
 
             <form method="POST" action="{{ route('two-factor.login.store') }}">

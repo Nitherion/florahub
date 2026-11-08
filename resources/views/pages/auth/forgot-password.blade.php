@@ -1,8 +1,6 @@
-<x-layouts::auth title="Recuperar palavra-passe";>
+<x-layouts::auth title="Recuperar palavra-passe">
     <div class="flex flex-col gap-6">
-        <x-auth-header title="Recuperar palavra-passe"
-                       description="Indique o seu email para receber uma ligação de reposição da palavra-passe."
-        />
+        <x-auth-header title="Recuperar palavra-passe" description="Indique o seu email para receber uma ligação de reposição da palavra-passe."/>
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />

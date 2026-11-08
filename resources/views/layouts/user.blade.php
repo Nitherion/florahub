@@ -87,14 +87,13 @@
             <div class="absolute right-0 z-20 mt-2 w-52 rounded-xl border border-stone-200 bg-white p-1.5 shadow-lg">
                 <a href="#" class="block rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">Perfil</a>
                 <a href="#" class="block rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">Definições</a>
+
                 <div class="my-1 border-t border-stone-200"></div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">Terminar sessão</button>
-                    </form>
+                    <button type="submit" class="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">Terminar sessão</button>
                 </form>
+
             </div>
         </details>
     </x-slot:actions>

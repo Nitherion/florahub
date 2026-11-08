@@ -1,9 +1,6 @@
 <x-layouts::auth title="Confirmar palavra-passe">
     <div class="flex flex-col gap-6">
-        <x-auth-header
-            title="Confirmar palavra-passe"
-            description="Esta é uma área segura da aplicação. Confirme a sua palavra-passe antes de continuar."
-        />
+        <x-auth-header title="Confirmar palavra-passe" description="Esta é uma área segura da aplicação. Confirme a sua palavra-passe antes de continuar."/>
 
         <x-auth-session-status class="text-center" :status="session('status')" />
 

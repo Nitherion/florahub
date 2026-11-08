@@ -140,14 +140,9 @@
                 <div class="my-1 border-t border-stone-200"></div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit"
-                            class="mt-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm text-stone-400 hover:bg-white/5 hover:text-white">
-                        <svg class="block rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50">
-
-                        </svg>
-                        Terminar sessão
-                    </button>
+                    <button type="submit" class="block w-full rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">Terminar sessão</button>
                 </form>
+
             </div>
         </details>
     </x-slot:actions>

@@ -1,11 +1,9 @@
-<x-layouts::auth title="Verificar email">
+<x-layouts::auth title="Verificar email" description="Confirme o seu endereço de email clicando na ligação que acabámos de lhe enviar">
     <div class="mt-4 flex flex-col gap-6">
-        <x-auth-header>
-            Confirme o seu endereço de email clicando na ligação que acabámos de lhe enviar.
-        </x-auth-header>
+        <x-auth-header title="Verificar email" description="Confirme o seu endereço de email clicando na ligação que acabámos de lhe enviar"/>
 
         @if (session('status') == 'verification-link-sent')
-            <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
+            <flux:text class="text-center font-medium !dark:text-green-400 text-green-600!">
                 Confirme o seu endereço de email clicando na ligação que acabámos de lhe enviar.
             </flux:text>
         @endif
