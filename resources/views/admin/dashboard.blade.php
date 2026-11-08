@@ -12,7 +12,7 @@
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
             </x-stat-card>
 
-            <x-stat-card label="Famílias botânicas" value="14" icon-class="bg-amber-100 text-amber-700">
+            <x-stat-card label="Famílias botânicas" :value="$familiesCount" icon-class="bg-amber-100 text-amber-700">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
             </x-stat-card>
 

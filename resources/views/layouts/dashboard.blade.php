@@ -8,6 +8,11 @@
 <html lang="pt">
 <head>
     @include('partials.head')
+    {{-- O design dos painéis é apenas claro: remove o modo escuro sem alterar a preferência guardada --}}
+    <script>
+        window.Flux.applyAppearance = () => document.documentElement.classList.remove('dark');
+        window.Flux.applyAppearance();
+    </script>
 </head>
 <body class="bg-stone-50 font-sans text-stone-800 antialiased">
 
@@ -77,6 +82,11 @@
         </main>
     </div>
 </div>
+<flux:toast.group>
+    <flux:toast />
+</flux:toast.group>
+
+@fluxScripts
 
 </body>
 </html>
