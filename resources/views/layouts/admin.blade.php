@@ -150,6 +150,8 @@
 
     {{ $slot }}
 
+    <livewire:confirm-modal />
+
 </x-layouts::dashboard>
 
 
