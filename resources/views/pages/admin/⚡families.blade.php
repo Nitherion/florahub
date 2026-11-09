@@ -6,18 +6,21 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Flux\Flux;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Locked;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 
 
 new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public string $search = '';
     public string $status = 'all';
@@ -28,6 +31,15 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     public string $name = '';
     public string $slug = '';
     public string $description = '';
+
+    public ?TemporaryUploadedFile $image = null;
+
+    #[Locked]
+    public ?string $currentImageUrl = null;
+
+    #[Locked]
+    public bool $imageRemoved = false;
+
 
 
 
@@ -76,7 +88,6 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     /**
      * The family shown in the show drawer, including a soft deleted one.
      */
-
     #[Computed]
     public function shownFamily(): ?Family
     {
@@ -154,17 +165,31 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
         $this->name = $family->name;
         $this->slug = $family->slug;
         $this->description = $family->description ?? '';
+        $this->currentImageUrl = $family->image_url;
+
 
         Flux::modal('family-form')->show();
     }
+
+    /**
+     * The validation rules for the family's image.
+     *
+     * @return array<int, string>
+     */
+    protected function imageRules(): array
+    {
+        return ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048', 'dimensions:min_width=800'];
+    }
+
 
     /**
      * Clear the form fields and validation errors.
      */
     protected function resetForm(): void
     {
-        $this->reset('editingId', 'name', 'slug', 'description');
+        $this->reset('editingId', 'name', 'slug', 'description', 'image', 'currentImageUrl', 'imageRemoved');
         $this->resetValidation();
+
     }
 
     /**
@@ -181,12 +206,24 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
         }
 
         $validated = $this->validate([
-
+            'name' => [/* … */],
+            'slug' => [/* … */],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'image' => $this->imageRules(),
         ]);
-        Flux::modal('family-form')->close();
-        $this->resetForm();
+
+        unset($validated['image']);
 
         $validated['description'] = $validated['description'] ?: null;
+
+        if ($this->image !== null) {
+            $validated['image'] = $this->image->store('families', 'public');
+        } elseif ($this->imageRemoved) {
+            $validated['image'] = null;
+        }
+
+        $oldImage = $family?->image;
+
 
         if ($family === null) {
             Family::create($validated);
@@ -198,16 +235,10 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
             Flux::toast(variant: 'success', text: 'Família atualizada.');
         }
 
-
-        if ($this->editingId === null) {
-            Family::create($validated);
-
-            Flux::toast(variant: 'success', text: 'Família criada.');
-        } else {
-            Family::findOrFail($this->editingId)->update($validated);
-
-            Flux::toast(variant: 'success', text: 'Família atualizada.');
+        if (array_key_exists('image', $validated) && $oldImage !== null) {
+            Storage::disk('public')->delete($oldImage);
         }
+
 
         Flux::modal('family-form')->close();
 
@@ -223,6 +254,27 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
             $this->slug = Str::slug($value);
         }
     }
+
+    /**
+     * Validate the image as soon as it is uploaded.
+     */
+    public function updatedImage(): void
+    {
+        $this->imageRemoved = false;
+
+        $this->validateOnly('image', ['image' => $this->imageRules()]);
+    }
+
+    /**
+     * Remove the chosen or current image from the form. The file is only deleted when the form is saved.
+     */
+    public function clearImage(): void
+    {
+        $this->image = null;
+        $this->currentImageUrl = null;
+        $this->imageRemoved = true;
+    }
+
 
     /**
      * Soft delete the family.
@@ -271,6 +323,10 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
         $this->authorize('forceDelete', $family);
 
         $family->forceDelete();
+
+        if ($family->image !== null) {
+            Storage::disk('public')->delete($family->image);
+        }
 
         $this->closeShow();
 
@@ -351,14 +407,21 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
                                 <div class="flex items-center gap-3">
 
 
-                                    {{-- Imagem da família: o carregamento de imagens será implementado numa tarefa futura --}}
-                                    <span @class([
-                                        'flex h-10 w-10 flex-none items-center justify-center rounded-lg',
-                                        'bg-brand-100 text-brand-700' => ! $family->trashed(),
-                                        'bg-red-100 text-red-600' => $family->trashed(),
-                                    ])>
-                                        <flux:icon.photo variant="mini" />
-                                    </span>
+                                    @if ($family->image_url)
+                                        <img src="{{ $family->image_url }}" alt="" @class([
+                                            'h-10 w-10 flex-none rounded-lg object-cover',
+                                            'opacity-50 grayscale' => $family->trashed(),
+                                        ])>
+                                    @else
+                                        <span @class([
+                                            'flex h-10 w-10 flex-none items-center justify-center rounded-lg',
+                                            'bg-brand-100 text-brand-700' => ! $family->trashed(),
+                                            'bg-red-100 text-red-600' => $family->trashed(),
+                                        ])>
+                                            <flux:icon.photo variant="mini" />
+                                        </span>
+                                    @endif
+
 
                                     <div>
                                         <button type="button" wire:click="show({{ $family->id }})" @class([
@@ -388,22 +451,22 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-2">
-                                @can('restore', $family)
-                                    <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
-                                @endcan
+                                    @can('restore', $family)
+                                        <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
+                                    @endcan
 
-                                @can('forceDelete', $family)
-                                    <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
-                                @endcan
+                                    @can('forceDelete', $family)
+                                            <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
+                                    @endcan
 
-                                @can('update', $family)
-                                    <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
-                                @endcan
+                                    @can('update', $family)
+                                            <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
+                                    @endcan
 
-                                @can('delete', $family)
-                                    <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
-            @endcan
-        </div>
+                                    @can('delete', $family)
+                                        <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
+                                    @endcan
+                                </div>
 
 
         </flux:table.cell>
@@ -425,11 +488,16 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
     <flux:modal name="family-show" flyout class="md:w-lg" @close="closeShow">
         @if ($shownFamily = $this->shownFamily)
             <div class="space-y-6">
-                {{-- Imagem da família: o carregamento de imagens será implementado numa tarefa futura --}}
-                <div class="flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-stone-300 bg-stone-50 text-stone-400">
-                    <flux:icon.photo class="size-10" />
-                    <span class="text-sm">Imagem ainda não disponível</span>
-                </div>
+
+                @if ($shownFamily->image_url)
+                    <img src="{{ $shownFamily->image_url }}" alt="{{ $shownFamily->name }}" class="aspect-video w-full rounded-xl object-cover">
+                @else
+                    <div class="flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-stone-300 bg-stone-50 text-stone-400">
+                        <flux:icon.photo class="size-10" />
+                        <span class="text-sm">Sem imagem</span>
+                    </div>
+                @endif
+
 
                 <div>
                     <div class="flex items-center gap-3">
@@ -511,6 +579,15 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
             />
 
             <flux:textarea wire:model="description" label="Descrição" rows="5" />
+
+            <x-image-upload
+                wire:model="image"
+                :file="$image"
+                :current="$currentImageUrl"
+                remove="clearImage"
+                description="JPG, PNG ou WebP, até 2 MB, com pelo menos 800 px de largura."
+            />
+
 
             <div class="flex justify-end gap-2">
                 <flux:modal.close>
