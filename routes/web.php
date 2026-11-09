@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Dev\QuickLoginController;
-use App\Models\Family;
-use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SetLocale;
+use App\Models\Family;
+use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
@@ -24,7 +24,6 @@ Route::get('locale/{locale}', function (Request $request, string $locale) {
     return back();
 })->whereIn('locale', SetLocale::SUPPORTED_LOCALES)->name('locale.update');
 
-
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::view('dashboard', 'user.dashboard')->name('dashboard');
 });
@@ -39,9 +38,20 @@ Route::middleware(['auth', 'verified', 'role:admin'])
             ]);
         })->name('dashboard');
 
+        Route::get('dashboard', function () {
+            return view('admin.dashboard', [
+                'familiesCount' => Family::count(),
+                'usersCount' => User::role('user')->count(),
+            ]);
+        })->name('dashboard');
+
         Route::livewire('families', 'pages::admin.families')
             ->can('viewAny', Family::class)
             ->name('families.index');
+
+        Route::livewire('users', 'pages::admin.users')
+            ->can('viewAny', User::class)
+            ->name('users.index');
 
     });
 

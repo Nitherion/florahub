@@ -99,5 +99,22 @@
     ":count new users registered": ":count novos utilizadores registados",
     "Today": "Hoje",
     "Species catalogue updated": "Catálogo de espécies atualizado",
-    "Back to the application": "Voltar à aplicação"
+    "Back to the application": "Voltar à aplicação",
+    "2FA": "2FA",
+    "Administrator": "Administrador",
+    "All roles": "Todos os perfis",
+    "Disabled": "Inativa",
+    "Email verified at": "Email verificado em",
+    "Enabled": "Ativa",
+    "No": "Não",
+    "No users found.": "Nenhum utilizador encontrado.",
+    "Not verified": "Não verificado",
+    "Registered on": "Registado em",
+    "Registered users of the application.": "Utilizadores registados na aplicação.",
+    "Role": "Perfil",
+    "Search by name or email…": "Pesquisar por nome ou email…",
+    "Total users": "Total de utilizadores",
+    "User": "Utilizador",
+    "Verified": "Verificado",
+    "Yes": "Sim"
 }
