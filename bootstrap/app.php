@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\AddRequestContext;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             SetLocale::class,
+            AddRequestContext::class,
         ]);
 
         $middleware->redirectUsersTo(fn (Request $request) => route($request->user()->dashboardRoute()));

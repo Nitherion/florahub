@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -226,11 +227,15 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
 
         if ($family === null) {
-            Family::create($validated);
+            $created = Family::create($validated);
 
-            Flux::toast(variant: 'success', text: 'Família criada.');
+            Log::channel('audit')->info('Family created', ['family_id' => $created->id]);
+
+            Flux::toast(variant: 'success', text: __('Family created.'));
         } else {
             $family->update($validated);
+
+            Log::channel('audit')->info('Family updated', ['family_id' => $family->id]);
 
             Flux::toast(variant: 'success', text: 'Família atualizada.');
         }
@@ -287,6 +292,8 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
         $family->delete();
 
+        Log::channel('audit')->info('Family removed', ['family_id' => $family->id]);
+
         $this->closeShow();
 
         Flux::toast(variant: 'warning', text: 'Família removida.');
@@ -324,6 +331,8 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
 
         $family->forceDelete();
 
+        Log::channel('audit')->info('Family force deleted', ['family_id' => $family->id]);
+
         if ($family->image !== null) {
             Storage::disk('public')->delete($family->image);
         }
@@ -345,6 +354,8 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
         $this->authorize('restore', $family);
 
         $family->restore();
+
+        Log::channel('audit')->info('Family restored', ['family_id' => $family->id]);
 
         Flux::toast(variant: 'success', text: 'Família restaurada.');
     }
