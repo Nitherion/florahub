@@ -200,5 +200,20 @@
     "GBIF is unavailable. Try again later.": "O GBIF está indisponível. Tente mais tarde.",
     "Too many GBIF lookups. Try again in :seconds seconds.": "Demasiadas consultas ao GBIF. Tente novamente dentro de :seconds segundos.",
     "Linked to GBIF": "Ligada ao GBIF",
-    "View on GBIF": "Ver no GBIF"
+    "View on GBIF": "Ver no GBIF",
+    "API tokens": "Tokens de API",
+    "Personal tokens to read your account and notifications through the FloraHub API.": "Tokens pessoais para ler a sua conta e as suas notificações através da API do FloraHub.",
+    "Token name": "Nome do token",
+    "E.g.: Postman": "Ex.: Postman",
+    "Copy the token now: it will not be shown again.": "Copie o token agora: não volta a ser mostrado.",
+    "Your tokens": "Os seus tokens",
+    "Created :date": "Criado em :date",
+    "Last used :date": "Último uso :date",
+    "Never used": "Nunca usado",
+    "Revoke": "Revogar",
+    "Revoke token": "Revogar token",
+    "Applications that use the token «:name» will stop working. This action cannot be undone.": "As aplicações que usam o token «:name» deixam de funcionar. Esta ação não pode ser desfeita.",
+    "You have no tokens.": "Não tem tokens.",
+    "Token created.": "Token criado.",
+    "Token revoked.": "Token revogado."
 }

@@ -185,6 +185,7 @@ return [
         'difficulty' => 'dificuldade',
         'subject' => 'assunto',
         'body' => 'mensagem',
+        'token_name' => 'nome do token',
 
     ],
 

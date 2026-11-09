@@ -1,16 +1,18 @@
 <?php
 
+use App\Http\Middleware\AddRequestContext;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Spatie\Permission\Middleware\RoleMiddleware;
-use App\Http\Middleware\SetLocale;
-use App\Http\Middleware\AddRequestContext;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -18,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
+            'abilities' => CheckAbilities::class,
         ]);
 
         $middleware->web(append: [
@@ -26,8 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectUsersTo(fn (Request $request) => route($request->user()->dashboardRoute()));
-    })
 
+        // The "api" group uses the "api" rate limiter defined in AppServiceProvider.
+        $middleware->throttleApi();
+
+    })
 
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
