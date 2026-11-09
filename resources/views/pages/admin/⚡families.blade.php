@@ -548,7 +548,13 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component {
                 </dl>
 
                 <div class="flex flex-wrap justify-end gap-2">
-                    @can('restore', $shownFamily)
+
+                    @can('view', $shownFamily)
+                        <flux:button icon="document-arrow-down" href="{{ route('admin.families.pdf', $shownFamily) }}">{{ __('Download PDF') }}</flux:button>
+                    @endcan
+
+
+                @can('restore', $shownFamily)
                         <flux:button icon="arrow-uturn-left" wire:click="restore({{ $shownFamily->id }})">Restaurar</flux:button>
                     @endcan
 

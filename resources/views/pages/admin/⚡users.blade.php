@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 use App\Notifications\UserMessage;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Locked;
+use App\Jobs\GenerateUsersReport;
 
 
 new #[Layout('layouts::admin')] #[Title('Users')] class extends Component {
@@ -162,13 +163,34 @@ new #[Layout('layouts::admin')] #[Title('Users')] class extends Component {
         $this->resetPage();
     }
 
+    /**
+     * Ask for the users report: a queued job generates the PDF and notifies the administrator when it is ready.
+     */
+    public function export(): void
+    {
+        $this->authorize('export', User::class);
+
+        GenerateUsersReport::dispatch(auth()->user());
+
+        Log::channel('audit')->info('Users report requested');
+
+        Flux::toast(text: __('The report is being generated. You will be notified when it is ready.'));
+    }
+
+
 };
 ?>
 
 <div>
-    <div>
-        <h2 class="text-2xl font-semibold tracking-tight text-stone-900">{{ __('Users') }}</h2>
-        <p class="mt-1 text-sm text-stone-500">{{ __('Registered users of the application.') }}</p>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-semibold tracking-tight text-stone-900">{{ __('Users') }}</h2>
+            <p class="mt-1 text-sm text-stone-500">{{ __('Registered users of the application.') }}</p>
+        </div>
+
+        @can('export', App\Models\User::class)
+            <flux:button icon="document-arrow-down" wire:click="export">{{ __('Export PDF') }}</flux:button>
+        @endcan
     </div>
 
     <div class="mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white">

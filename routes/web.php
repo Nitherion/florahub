@@ -5,8 +5,11 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Family;
 use App\Models\Species;
 use App\Models\User;
+use App\Notifications\UsersReportReady;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::view('/', 'home')->name('home');
 
@@ -53,9 +56,35 @@ Route::middleware(['auth', 'verified', 'role:admin'])
             ->can('viewAny', Family::class)
             ->name('families.index');
 
+        // Ficha da família em PDF, gerada e descarregada no próprio pedido (síncrono).
+        Route::get('families/{family:slug}/pdf', function (Family $family) {
+            return Pdf::loadView('pdf.family', [
+                'family' => $family,
+                'species' => $family->species()->orderBy('scientific_name')->get(),
+                'imagePath' => $family->image ? Storage::disk('public')->path($family->image) : null,
+            ])->download($family->slug.'.pdf');
+        })
+            ->withTrashed()
+            ->can('view', 'family')
+            ->name('families.pdf');
+
         Route::livewire('users', 'pages::admin.users')
             ->can('viewAny', User::class)
             ->name('users.index');
+
+        Route::get('reports/{notification}', function (Request $request, string $notification) {
+            $notification = $request->user()->notifications()->findOrFail($notification);
+
+            abort_unless($notification->type === UsersReportReady::class, 404);
+
+            $path = $notification->data['path'];
+
+            abort_unless(Storage::disk('local')->exists($path), 404);
+
+            $notification->markAsRead();
+
+            return Storage::disk('local')->download($path, 'florahub-users.pdf');
+        })->name('reports.download');
 
     });
 

@@ -177,5 +177,15 @@
     "Mark as read": "Marcar como lida",
     "No notifications": "Sem notificações",
     "See all": "Ver todas",
-    "Queues": "Filas"
+    "Queues": "Filas",
+    "FloraHub · Generated on :date": "FloraHub · Gerado em :date",
+    "Botanical family": "Família botânica",
+    "This family has no species.": "Esta família não tem espécies.",
+    "Download PDF": "Descarregar PDF",
+    "Users report": "Relatório de utilizadores",
+    "Confidential: contains personal data.": "Confidencial: contém dados pessoais.",
+    ":count user|:count users": ":count utilizador|:count utilizadores",
+    "Export PDF": "Exportar PDF",
+    "The report is being generated. You will be notified when it is ready.": "O relatório está a ser gerado. Será notificado quando estiver pronto.",
+    "Users report ready": "Relatório de utilizadores pronto"
 }
