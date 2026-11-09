@@ -177,6 +177,13 @@ return [
         'code' => 'código',
         'remember' => 'lembrar-me',
         'token' => 'código',
+        'scientific_name' => 'nome científico',
+        'common_name' => 'nome comum',
+        'family_id' => 'família',
+        'light' => 'luz',
+        'watering' => 'rega',
+        'difficulty' => 'dificuldade',
+
     ],
 
 ];

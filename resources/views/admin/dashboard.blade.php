@@ -8,7 +8,7 @@
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
             </x-stat-card>
 
-            <x-stat-card label="Espécies no catálogo" value="96" icon-class="bg-sky-100 text-sky-700">
+            <x-stat-card :label="__('Species in the catalogue')" :value="$speciesCount" icon-class="bg-sky-100 text-sky-700">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C7 21 3 17 3 11.5 3 6 7.5 3 12 3c1 4 5 5.5 5 10.5S15 21 12 21Z"/></svg>
             </x-stat-card>
 
@@ -27,7 +27,7 @@
         <div class="mt-6">
             <div class="flex items-center justify-between">
                 <h3 class="text-sm font-semibold text-stone-900">Espécies adicionadas recentemente</h3>
-                <a href="#" class="text-sm font-medium text-brand-700 hover:text-brand-800">Gerir espécies</a>
+                <a href="{{ route('admin.species.index') }}" class="text-sm font-medium text-brand-700 hover:text-brand-800">{{ __('Manage species') }}</a>
             </div>
             <div class="mt-4 overflow-hidden rounded-t-2xl border border-stone-200 bg-white">
                 <div class="border-b border-stone-200 p-4">
