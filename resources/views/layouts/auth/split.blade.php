@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
 
@@ -42,6 +42,7 @@
                     </span>
                 <span class="text-lg font-semibold tracking-tight text-stone-900">FloraHub</span>
             </a>
+            <x-locale-switcher class="ml-auto" />
 
             {{ $slot }}
         </div>

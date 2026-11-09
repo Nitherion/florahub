@@ -1,6 +1,7 @@
-<x-layouts::auth title="Criar conta">
+<x-layouts::auth :title="__('Create account')">
     <div class="flex flex-col gap-6">
-        <x-auth-header title="Crie a sua conta" description="Comece hoje a acompanhar a sua coleção de plantas." />
+        <x-auth-header :title="__('Create your account')" :description="__('Start tracking your plant collection today.')" />
+
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -10,19 +11,21 @@
             <!-- Name -->
             <flux:input
                 name="name"
-                label="Nome"
+                label="{{ __('Name') }}"
                 :value="old('name')"
                 type="text"
                 required
                 autofocus
                 autocomplete="name"
-                placeholder="Nome completo"
+                placeholder="{{ __('Full name') }}"
             />
+
+            {{-- Email: label="{{ __('Email') }}"; Password: label="{{ __('Password') }}" --}}
 
             <!-- Email Address -->
             <flux:input
                 name="email"
-                label="Email"
+                label="{{ __('Email') }}"
                 :value="old('email')"
                 type="email"
                 required
@@ -33,7 +36,7 @@
             <!-- Password -->
             <flux:input
                 name="password"
-                label="Palavra-passe"
+                label="{{ __('Password') }}"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -45,7 +48,7 @@
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                label="Confirmar palavra-passe"
+                label="{{ __('Confirm password') }}"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -56,15 +59,15 @@
 
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
-                    Criar conta
+                    {{ __('Create account') }}
                 </flux:button>
             </div>
         </form>
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
             <p class="text-center text-sm text-stone-500">
-                Já tem conta?
-                <a href="{{ route('login') }}" class="font-medium text-brand-700 hover:text-brand-800">Iniciar sessão</a>
+                {{ __('Already have an account?') }}
+                <a href="{{ route('login') }}" class="font-medium text-brand-700 hover:text-brand-800">{{ __('Log in') }}</a>
             </p>
         </div>
     </div>

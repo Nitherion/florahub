@@ -4,8 +4,8 @@
     'dark' => false,
 ])
 
-    <!DOCTYPE html>
-<html lang="pt">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
     {{-- O design dos painéis é apenas claro: remove o modo escuro sem alterar a preferência guardada --}}
@@ -71,9 +71,12 @@
                 <h1 class="text-base font-semibold text-stone-900">{{ $title }}</h1>
             </div>
 
-            <div class="ml-auto flex items-center gap-2">
+            <div class="ml-auto flex items-center gap-3">
+                <x-locale-switcher :dark="false" />
+
                 {{ $actions }}
             </div>
+
         </header>
 
         <!-- Conteúdo da página -->
