@@ -22,8 +22,10 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Enums\Difficulty;
 use App\Enums\Light;
 use App\Enums\Watering;
-
-
+use App\Services\Gbif\GbifClient;
+use App\Services\Gbif\GbifSpecies;
+use App\Services\Gbif\GbifUnavailableException;
+use Illuminate\Support\Facades\RateLimiter;
 
 
 new #[Layout('layouts::admin')]
@@ -48,6 +50,103 @@ class extends Component {
     public string $difficulty = '';
     public bool $toxic_to_pets = false;
     public string $care_notes = '';
+    #[Locked]
+    public ?int $gbif_key = null;
+
+    /**
+     * The species proposed by GBIF, shown to the admin before it is applied to the form.
+     *
+     * @var array{usage_key: int, canonical_name: string, family: string|null, family_id: int|null, match_type: string, confidence: int, uncertain: bool, url: string}|null
+     */
+    #[Locked]
+    public ?array $gbifProposal = null;
+
+
+    #[Locked]
+    public bool $gbifNotFound = false;
+
+    /**
+     * Look up the scientific name on GBIF and show the proposal. The form is only changed by applyGbif().
+     */
+    public function lookupGbif(GbifClient $gbif): void
+    {
+        $this->authorizeForm();
+
+        $this->validateOnly('scientific_name', ['scientific_name' => ['required', 'string', 'max:255']]);
+
+        $this->gbifProposal = null;
+        $this->gbifNotFound = false;
+
+        // At most 10 lookups per minute for each admin: GBIF is a free service shared by everyone.
+        $key = 'gbif-lookup:'.auth()->id();
+
+        if (RateLimiter::tooManyAttempts($key, 10)) {
+            Flux::toast(variant: 'warning', text: __('Too many GBIF lookups. Try again in :seconds seconds.', ['seconds' => RateLimiter::availableIn($key)]));
+
+            return;
+        }
+
+        RateLimiter::hit($key, 60);
+
+        try {
+            $species = $gbif->match($this->scientific_name);
+        } catch (GbifUnavailableException) {
+            Flux::toast(variant: 'warning', text: __('GBIF is unavailable. Try again later.'));
+
+            return;
+        }
+
+        if ($species === null) {
+            $this->gbifNotFound = true;
+
+            return;
+        }
+
+        $this->gbifProposal = [
+            'usage_key' => $species->usageKey,
+            'canonical_name' => $species->canonicalName,
+            'family' => $species->family,
+            'family_id' => $species->family ? Family::where('name', $species->family)->value('id') : null,
+            'match_type' => $species->matchType,
+            'confidence' => $species->confidence,
+            'uncertain' => $species->isUncertain(),
+            'url' => $species->url(),
+        ];
+    }
+
+    /**
+     * Fill the form with the GBIF proposal. The family is only chosen when it is an active family of the catalogue.
+     */
+    public function applyGbif(): void
+    {
+        $this->authorizeForm();
+
+        $proposal = $this->gbifProposal;
+
+        if ($proposal === null) {
+            return;
+        }
+
+        $this->updatingScientificName($proposal['canonical_name']);
+        $this->scientific_name = $proposal['canonical_name'];
+        $this->gbif_key = $proposal['usage_key'];
+
+        if ($proposal['family_id'] !== null) {
+            $this->family_id = (string) $proposal['family_id'];
+        } elseif ($proposal['family'] !== null) {
+            Flux::toast(variant: 'warning', text: __('The family :name is not in the catalogue.', ['name' => $proposal['family']]));
+        }
+    }
+
+    /**
+     * Close the GBIF proposal without changing the form.
+     */
+    public function dismissGbif(): void
+    {
+        $this->gbifProposal = null;
+        $this->gbifNotFound = false;
+    }
+
 
 
     public ?TemporaryUploadedFile $image = null;
@@ -223,6 +322,9 @@ class extends Component {
         $this->difficulty = $species->difficulty->value;
         $this->toxic_to_pets = $species->toxic_to_pets;
         $this->care_notes = $species->care_notes ?? '';
+        $this->care_notes = $species->care_notes ?? '';
+        $this->gbif_key = $species->gbif_key;
+
 
 
         Flux::modal('species-form')->show();
@@ -244,8 +346,12 @@ class extends Component {
     protected function resetForm(): void
     {
         $this->reset(
-            'editingId', 'family_id', 'scientific_name', 'common_name', 'slug', 'description', 'light', 'watering', 'difficulty', 'toxic_to_pets', 'care_notes', 'image', 'currentImageUrl', 'imageRemoved',
+            'editingId', 'family_id', 'scientific_name', 'common_name', 'slug', 'description',
+            'light', 'watering', 'difficulty', 'toxic_to_pets', 'care_notes',
+            'gbif_key', 'gbifProposal', 'gbifNotFound',
+            'image', 'currentImageUrl', 'imageRemoved',
         );
+
         $this->resetValidation();
     }
 
@@ -255,7 +361,7 @@ class extends Component {
      */
     public function save(): void
     {
-        $species = $this->editingId === null ? null : $this->findSpecies($this->editingId);
+        $species = $this->authorizeForm();
 
         if ($species === null) {
             $this->authorize('create', Species::class);
@@ -275,6 +381,9 @@ class extends Component {
             'toxic_to_pets' => ['boolean'],
             'care_notes' => ['nullable', 'string', 'max:5000'],
             'image' => $this->imageRules(),
+            'care_notes' => ['nullable', 'string', 'max:5000'],
+            'gbif_key' => ['nullable', 'integer'],
+
         ]);
 
 
@@ -316,12 +425,34 @@ class extends Component {
     }
 
     /**
+     * Authorize the form: creating a new species or updating the one being edited, which is returned.
+     */
+    protected function authorizeForm(): ?Species
+    {
+        $species = $this->editingId === null ? null : $this->findSpecies($this->editingId);
+
+        if ($species === null) {
+            $this->authorize('create', Species::class);
+        } else {
+            $this->authorize('update', $species);
+        }
+
+        return $species;
+    }
+
+
+    /**
      * Keep the slug in sync with the scientific name until the admin edits the slug by hand.
      */
     public function updatingScientificName(string $value): void
     {
         if ($this->slug === Str::slug($this->scientific_name)) {
             $this->slug = Str::slug($value);
+            // A new name is no longer the one GBIF matched.
+            $this->gbif_key = null;
+            $this->gbifProposal = null;
+            $this->gbifNotFound = false;
+
         }
     }
 
@@ -642,12 +773,27 @@ class extends Component {
                             <dt class="text-stone-500">{{ __('Difficulty') }}</dt>
                             <dd class="font-medium text-stone-900">{{ $shownSpecies->difficulty->label() }}</dd>
                         </div>
+
                         <div class="col-span-2">
                             <dt class="text-stone-500">{{ __('Toxicity') }}</dt>
                             <dd @class(['font-medium', 'text-red-700' => $shownSpecies->toxic_to_pets, 'text-stone-900' => ! $shownSpecies->toxic_to_pets])>
                                 {{ $shownSpecies->toxic_to_pets ? __('Toxic to pets') : __('Not toxic to pets') }}
                             </dd>
                         </div>
+
+                        @if ($shownSpecies->gbif_url)
+                            <div class="col-span-2">
+                                <dt class="text-stone-500">GBIF</dt>
+                                <dd>
+                                    <a href="{{ $shownSpecies->gbif_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 font-medium text-brand-700 hover:underline">
+                                        {{ __('View on GBIF') }}
+                                        <flux:icon.arrow-top-right-on-square variant="micro" />
+                                    </a>
+                                </dd>
+                            </div>
+                        @endif
+
+
                     </dl>
 
                     {{--descrição--}}
@@ -732,7 +878,79 @@ class extends Component {
                 @endforeach
             </flux:select>
 
-            <flux:input wire:model.blur="scientific_name" label="{{ __('Scientific name *') }}" placeholder="{{ __('E.g.: Monstera deliciosa') }}" />
+            <div class="space-y-3">
+                <div class="flex items-start gap-2">
+                    <div class="flex-1">
+                        <flux:input wire:model.blur="scientific_name" label="{{ __('Scientific name *') }}" placeholder="{{ __('E.g.: Monstera deliciosa') }}" />
+                    </div>
+
+                    <flux:button type="button" icon="magnifying-glass" class="mt-6" wire:click="lookupGbif" wire:loading.attr="disabled" wire:target="lookupGbif">
+                        {{ __('Look up on GBIF') }}
+                    </flux:button>
+                </div>
+
+                @if ($gbif_key)
+                    <flux:text class="text-xs">
+                        {{ __('Linked to GBIF') }}:
+                        <a href="{{ GbifSpecies::urlFor($gbif_key) }}" target="_blank" rel="noopener" class="font-medium text-brand-700 hover:underline">{{ $gbif_key }}</a>
+                    </flux:text>
+                @endif
+
+
+
+                @if ($gbifProposal !== null)
+                    @if ($gbifProposal['uncertain'])
+                    <p class="text-amber-800">{{ __('Uncertain match: check the name before applying it.') }}</p>
+                    @endif
+                @endif
+
+                @if ($gbifProposal['family'] !== null && $gbifProposal['family_id'] === null)
+                    <p class="text-amber-800">{{ __('The family :name is not in the catalogue.', ['name' => $gbifProposal['family']]) }}</p>
+                @endif
+
+                <div class="flex justify-end gap-2">
+                    <flux:button type="button" size="sm" variant="ghost" wire:click="dismissGbif">{{ __('Dismiss') }}</flux:button>
+                    <flux:button type="button" size="sm" variant="primary" icon="check" wire:click="applyGbif">{{ __('Apply') }}</flux:button>
+                </div>
+
+
+            @if ($gbifProposal)
+                    <div @class([
+                        'space-y-3 rounded-xl border p-4 text-sm',
+                        'border-amber-300 bg-amber-50' => $gbifProposal['uncertain'],
+                        'border-brand-200 bg-brand-50' => ! $gbifProposal['uncertain'],
+                    ])>
+                        <p class="font-semibold text-stone-900">{{ __('GBIF proposal') }}</p>
+
+                        <dl class="grid grid-cols-2 gap-3">
+                            <div>
+                                <dt class="text-stone-500">{{ __('Scientific name') }}</dt>
+                                <dd class="font-medium italic text-stone-900">{{ $gbifProposal['canonical_name'] }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-stone-500">{{ __('Family') }}</dt>
+                                <dd class="font-medium text-stone-900">{{ $gbifProposal['family'] ?? '—' }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-stone-500">{{ __('Match') }}</dt>
+                                <dd class="font-medium text-stone-900">{{ $gbifProposal['match_type'] }} · {{ $gbifProposal['confidence'] }}%</dd>
+                            </div>
+                            <div>
+                                <dt class="text-stone-500">{{ __('GBIF key') }}</dt>
+                                <dd><a href="{{ $gbifProposal['url'] }}" target="_blank" rel="noopener" class="font-medium text-brand-700 hover:underline">{{ $gbifProposal['usage_key'] }}</a></dd>
+                            </div>
+                        </dl>
+
+                        {{-- Exercício: os avisos e os botões --}}
+                    </div>
+                @elseif ($gbifNotFound)
+                    <div class="flex items-start justify-between gap-3 rounded-xl border border-stone-200 bg-stone-50 p-4 text-sm text-stone-600">
+                        <p>{{ __('GBIF does not know this name. Check the spelling.') }}</p>
+                        <flux:button type="button" size="sm" variant="ghost" wire:click="dismissGbif">{{ __('Dismiss') }}</flux:button>
+                    </div>
+                @endif
+            </div>
+
 
             <flux:input wire:model="common_name" label="{{ __('Common name *') }}" placeholder="{{ __('E.g.: Swiss cheese plant') }}" />
 

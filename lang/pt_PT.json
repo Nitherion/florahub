@@ -187,5 +187,18 @@
     ":count user|:count users": ":count utilizador|:count utilizadores",
     "Export PDF": "Exportar PDF",
     "The report is being generated. You will be notified when it is ready.": "O relatório está a ser gerado. Será notificado quando estiver pronto.",
-    "Users report ready": "Relatório de utilizadores pronto"
+    "Users report ready": "Relatório de utilizadores pronto",
+    "Look up on GBIF": "Consultar no GBIF",
+    "GBIF proposal": "Proposta do GBIF",
+    "Match": "Correspondência",
+    "GBIF key": "Chave GBIF",
+    "Uncertain match: check the name before applying it.": "Correspondência incerta: confirme o nome antes de a aplicar.",
+    "The family :name is not in the catalogue.": "A família :name não está no catálogo.",
+    "Dismiss": "Fechar",
+    "Apply": "Aplicar",
+    "GBIF does not know this name. Check the spelling.": "O GBIF não conhece este nome. Confirme a ortografia.",
+    "GBIF is unavailable. Try again later.": "O GBIF está indisponível. Tente mais tarde.",
+    "Too many GBIF lookups. Try again in :seconds seconds.": "Demasiadas consultas ao GBIF. Tente novamente dentro de :seconds segundos.",
+    "Linked to GBIF": "Ligada ao GBIF",
+    "View on GBIF": "Ver no GBIF"
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Difficulty;
 use App\Enums\Light;
 use App\Enums\Watering;
+use App\Services\Gbif\GbifSpecies;
 use Database\Factories\SpeciesFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,8 +36,9 @@ use Illuminate\Support\Facades\Storage;
  * @property-read Family $family
  */
 #[Fillable([
-    'family_id', 'scientific_name', 'common_name', 'slug', 'description', 'light', 'watering', 'difficulty', 'toxic_to_pets', 'care_notes', 'image',
+    'family_id', 'scientific_name', 'common_name', 'slug', 'description', 'light', 'watering', 'difficulty', 'toxic_to_pets', 'care_notes', 'image', 'gbif_key',
 ])]
+
 class Species extends Model
 {
     /** @use HasFactory<SpeciesFactory> */
@@ -54,6 +56,8 @@ class Species extends Model
             'watering' => Watering::class,
             'difficulty' => Difficulty::class,
             'toxic_to_pets' => 'boolean',
+            'gbif_key' => 'integer',
+
         ];
 
     }
@@ -77,6 +81,18 @@ class Species extends Model
     {
         return Attribute::get(
             fn (): ?string => $this->image ? Storage::disk('public')->url($this->image) : null,
+        );
+    }
+
+    /**
+     * The species' page on the GBIF website, or null when it is not linked to GBIF.
+     *
+     * @return Attribute<string|null, never>
+     */
+    protected function gbifUrl(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?string => $this->gbif_key ? GbifSpecies::urlFor($this->gbif_key) : null,
         );
     }
 
