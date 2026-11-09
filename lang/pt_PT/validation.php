@@ -183,6 +183,8 @@ return [
         'light' => 'luz',
         'watering' => 'rega',
         'difficulty' => 'dificuldade',
+        'subject' => 'assunto',
+        'body' => 'mensagem',
 
     ],
 

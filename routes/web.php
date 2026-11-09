@@ -27,6 +27,8 @@ Route::get('locale/{locale}', function (Request $request, string $locale) {
 
 Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::view('dashboard', 'user.dashboard')->name('dashboard');
+
+    Route::livewire('notifications', 'pages::notifications.index')->name('notifications.index');
 });
 
 Route::middleware(['auth', 'verified', 'role:admin'])

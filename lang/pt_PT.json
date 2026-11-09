@@ -163,5 +163,19 @@
     "Toxicity": "Toxicidade",
     "Watering": "Rega",
     "Watering *": "Rega *",
-    "Watering, light, substrate, temperature, fertilisation…": "Rega, luz, substrato, temperatura, fertilização…"
+    "Watering, light, substrate, temperature, fertilisation…": "Rega, luz, substrato, temperatura, fertilização…",
+    "Hello, :name!": "Olá, :name!",
+    "View notifications": "Ver notificações",
+    "Send message": "Enviar mensagem",
+    "The user receives the message in the application and by email.": "O utilizador recebe a mensagem na aplicação e por email.",
+    "Subject *": "Assunto *",
+    "Message *": "Mensagem *",
+    "Send": "Enviar",
+    "Message queued.": "Mensagem colocada na fila.",
+    "Messages sent to you by the FloraHub team.": "Mensagens enviadas pela equipa do FloraHub.",
+    "Mark all as read": "Marcar todas como lidas",
+    "Mark as read": "Marcar como lida",
+    "No notifications": "Sem notificações",
+    "See all": "Ver todas",
+    "Queues": "Filas"
 }
