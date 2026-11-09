@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             FamilySeeder::class,
+            SpeciesSeeder::class,
         ]);
 
         if (app()->isLocal()) {

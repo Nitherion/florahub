@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Database\Factories\FamilyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property-read string|null $image_url
+ * @property-read Collection<int, Species> $species
  */
 #[Fillable(['name', 'slug', 'description', 'image'])]
 class Family extends Model
@@ -40,7 +43,13 @@ class Family extends Model
         );
     }
 
-
+    /**
+     * The species that belong to the family.
+     *
+     * @return HasMany<Species, $this>
+     */
+    public function species(): HasMany
+    {
+        return $this->hasMany(Species::class);
+    }
 }
-
-
